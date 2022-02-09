@@ -1,7 +1,19 @@
+using Les2MySportsClub.Data;
+using Les2MySportsClub.Models;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Add a DBContext to the container,
+// see also: https://stackoverflow.com/questions/68980778/config-connection-string-in-net-core-6
+builder.Services.AddDbContext<SportsClubContext>(options => options.UseSqlServer(connectionString))
+    .AddTransient<IMemberRepository, EFMemberRepository>()
+    .AddTransient<IWorkoutRepository, EFWorkoutRepository>();
 
 var app = builder.Build();
 
