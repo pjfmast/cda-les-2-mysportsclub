@@ -44,6 +44,10 @@ namespace Les2MySportsClub.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Title,Location,StartTime,EndTime")] Workout workout) {
+            if (workout.StartTime > workout.EndTime) {
+                ModelState.AddModelError("", "end time of workout should be after start time.");
+            }
+            
             if (ModelState.IsValid) {
                 await repository.InsertAsync(workout);
                 return RedirectToAction(nameof(Index));
